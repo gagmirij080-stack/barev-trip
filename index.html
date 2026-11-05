@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barev.trip — Տուրեր և ճանապարհորդություններ Հայաստանում | AI Ուղեկից</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #d97706;
+            --primary-dark: #b45309;
+            --accent: #0f172a;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; color: var(--accent); background-color: #fff; line-height: 1.7; overflow-x: hidden; }
+        h1, h2, h3, .logo { font-family: 'Playfair Display', serif; }
+
+        /* Floating WhatsApp Button */
+        .float-cta {
+            position: fixed;
+            bottom: 30px; left: 30px;
+            background: #25d366;
+            color: #fff;
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
+            z-index: 1500;
+            transition: var(--transition);
+            text-decoration: none;
+            animation: pulseGlow 2s infinite;
+        }
+        .float-cta:hover { transform: scale(1.1) rotate(10deg); }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6); }
+            70% { box-shadow: 0 0 0 20px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+
+        /* Floating AI Agent Trigger */
+        .ai-chat-trigger {
+            position: fixed;
+            bottom: 30px; right: 30px;
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            color: #fff;
+            padding: 0.9rem 1.6rem;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+            box-shadow: 0 12px 30px rgba(217, 119, 6, 0.45);
+            z-index: 1500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            animation: pulseAi 2.5s infinite;
+        }
+        .ai-chat-trigger:hover { transform: translateY(-4px) scale(1.03); box-shadow: 0 18px 40px rgba(217, 119, 6, 0.6); }
+        .ai-badge {
+            background: #fff;
+            color: var(--primary);
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+        @keyframes pulseAi {
+            0%, 100% { box-shadow: 0 12px 30px rgba(217, 119, 6, 0.45); }
+            50% { box-shadow: 0 16px 45px rgba(217, 119, 6, 0.75); }
+        }
+
+        /* AI Chat Window */
+        .ai-chat-window {
+            position: fixed;
+            bottom: 100px; right: 30px;
+            width: 400px;
+            max-width: 92vw;
+            height: 600px;
+            max-height: 82vh;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 25px 60px rgba(15, 23, 42, 0.25);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1600;
+            border: 1px solid #e2e8f0;
+            animation: chatSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes chatSlideUp {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .ai-chat-header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #fff;
+            padding: 1.2rem 1.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid var(--primary);
+        }
+        .ai-header-left { display: flex; align-items: center; gap: 0.75rem; }
+        .ai-avatar {
+            width: 44px; height: 44px;
+            background: linear-gradient(135deg, #d97706, #fbbf24);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(217, 119, 6, 0.4);
+        }
+        .ai-header-info h4 { font-size: 1.05rem; margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .ai-header-info span { font-size: 0.75rem; color: #10b981; display: flex; align-items: center; gap: 0.3rem; }
+        .ai-header-info span::before {
+            content: ''; width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block;
+        }
+        .ai-close-btn { background: none; border: none; color: #94a3b8; font-size: 1.4rem; cursor: pointer; transition: color 0.2s; }
+        .ai-close-btn:hover { color: #fff; }
+
+        .ai-messages {
+            flex: 1;
+            padding: 1.2rem;
+            overflow-y: auto;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+        .msg {
+            max-width: 82%;
+            padding: 0.75rem 1.1rem;
+            border-radius: 16px;
+            font-size: 0.92rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+        .msg.bot {
+            background: #ffffff;
+            color: var(--accent);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+            border: 1px solid #e2e8f0;
+        }
+        .msg.user {
+            background: var(--primary);
+            color: #ffffff;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25);
+        }
+        .ai-quick-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            padding: 0.6rem 1.2rem 0;
+            background: #f8fafc;
+        }
+        .ai-tag {
+            background: #fff;
+            border: 1px solid #cbd5e1;
+            padding: 0.3rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            color: var(--accent);
+            transition: var(--transition);
+        }
+        .ai-tag:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+        .ai-input-area {
+            display: flex;
+            padding: 0.9rem 1.2rem;
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            gap: 0.5rem;
+        }
+        .ai-input-area input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 25px;
+            font-size: 0.92rem;
+            font-family: inherit;
+            outline: none;
+            transition: var(--transition);
+        }
+        .ai-input-area input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15); }
+        .ai-send-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            width: 42px; height: 42px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        .ai-send-btn:hover { background: var(--primary-dark); transform: scale(1.05); }
+
+        /* Top Bar */
+        .lang-bar {
+            background-color: #0b1120;
+            color: #94a3b8;
+            padding: 0.6rem 5%;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .lang-switcher { display: flex; gap: 1rem; }
+        .lang-switcher a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        .lang-switcher a.active, .lang-switcher a:hover { color: var(--primary); transform: scale(1.05); }
+
+        /* Navbar */
+        navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 5%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.6s ease;
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .logo span { color: var(--primary); }
+        .nav-menu { display: flex; gap: 2rem; list-style: none; align-items: center; }
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.95rem;
+            position: relative;
+            transition: var(--transition);
+        }
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--primary);
+            transition: var(--transition);
+        }
+        .nav-menu a:hover::after { width: 100%; }
+        .nav-menu a:hover { color: var(--primary); }
+
+        .btn {
+            background-color: var(--primary);
+            color: #fff;
+            padding: 0.75rem 1.8rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+            transition: 0.6s;
+        }
+        .btn:hover::before { left: 100%; }
+        .btn:hover { background-color: var(--primary-dark); transform: translateY(-3px); box-shadow: 0 8px 25px rgba(217, 119, 6, 0.5); }
+
+        /* Hero with Parallax & Zoom */
+        .hero {
+            background: linear-gradient(rgba(15, 23, 42, 0.55), rgba(15, 23, 42, 0.75)), url('https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=2000&q=80') center/cover no-repeat fixed;
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #fff;
+            padding: 2rem;
+            animation: fadeIn 1s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .hero h1 {
+            font-size: 4rem;
+            max-width: 900px;
+            margin-bottom: 1.5rem;
+            line-height: 1.15;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+        .hero p {
+            font-size: 1.25rem;
+            max-width: 650px;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+        .hero-btns { animation: fadeInUp 0.8s ease 0.6s both; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Booking Widget */
+        .booking-widget {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+            max-width: 1100px;
+            width: 90%;
+            margin: -4rem auto 4rem;
+            position: relative;
+            z-index: 10;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) auto;
+            gap: 1.5rem;
+            align-items: center;
+            transition: var(--transition);
+        }
+        .booking-widget:hover {
+            box-shadow: 0 25px 50px rgba(217, 119, 6, 0.15);
+            transform: translateY(-5px);
+        }
+        .field-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--gray);
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+        }
+        .field-group select, .field-group input {
+            width: 100%;
+            padding: 0.85rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            transition: var(--transition);
+        }
+        .field-group select:focus, .field-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(217,119,6,0.15);
+        }
+
+        /* Container & Sections */
+        .container { max-width: 1280px; margin: 0 auto; padding: 5rem 2rem; }
+        .section-header { text-align: center; max-width: 700px; margin: 0 auto 4rem; }
+        .section-header span { color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; font-size: 0.85rem; display: block; margin-bottom: 0.5rem; }
+        .section-header h2 { font-size: 3rem; color: var(--accent); margin-bottom: 1rem; }
+
+        /* Stats Banner */
+        .stats-banner {
+            background: linear-gradient(135deg, var(--accent) 0%, #1e293b 100%);
+            color: #fff;
+            padding: 4rem 2rem;
+            border-radius: 20px;
+            max-width: 1200px;
+            margin: 0 auto 4rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        .stat-item h3 {
+            font-size: 3rem;
+            color: var(--primary);
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 0.5rem;
+        }
+        .stat-item p {
+            color: #94a3b8;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Tours Grid */
+        .tours-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 2.5rem; }
+        .tour-card {
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .tour-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.12);
+            border-color: rgba(217,119,6,0.3);
+        }
+        .tour-img-wrap { position: relative; height: 260px; overflow: hidden; }
+        .tour-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+        .tour-card:hover .tour-img-wrap img { transform: scale(1.1); }
+        .tour-badge {
+            position: absolute;
+            top: 1rem; left: 1rem;
+            background: rgba(15, 23, 42, 0.85);
+            color: #fff;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            backdrop-filter: blur(4px);
+        }
+        .tour-content { padding: 2rem; display: flex; flex-direction: column; flex-grow: 1; }
+        .tour-meta { display: flex; gap: 1.5rem; font-size: 0.85rem; color: var(--gray); margin-bottom: 1rem; }
+        .tour-meta i { color: var(--primary); }
+        .tour-content h3 { font-size: 1.5rem; margin-bottom: 0.75rem; color: var(--accent); transition: color 0.3s; }
+        .tour-card:hover .tour-content h3 { color: var(--primary); }
+        .tour-content p { color: var(--gray); font-size: 0.95rem; margin-bottom: 1.5rem; flex-grow: 1; }
+        .tour-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; padding-top: 1.25rem; margin-top: auto; }
+        .tour-price span { font-size: 0.8rem; color: var(--gray); display: block; }
+        .tour-price strong { font-size: 1.4rem; color: var(--accent); }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(6px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-content {
+            background: #fff;
+            padding: 3rem;
+            border-radius: 24px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+            animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes scaleUp {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .close-modal {
+            position: absolute;
+            top: 1.5rem; right: 1.5rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+            transition: color 0.3s;
+        }
+        .close-modal:hover { color: var(--accent); }
+
+        footer { background-color: var(--accent); color: #fff; padding: 4rem 5% 2rem; }
+        .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; text-align: center; color: #64748b; font-size: 0.9rem; margin-top: 3rem; }
+    </style>
+</head>
+<body>
+
+    <!-- Floating WhatsApp CTA Button -->
+    <a href="https://wa.me/37410123456" target="_blank" class="float-cta" title="WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Floating AI Travel Concierge Trigger Button -->
+    <div class="ai-chat-trigger" onclick="toggleAiChat()">
+        <div class="ai-badge"><i class="fas fa-robot"></i></div>
+        <span id="aiTriggerText">AI Ուղեկից</span>
+    </div>
+
+    <!-- Interactive AI Concierge Chatbot -->
+    <div class="ai-chat-window" id="aiChatWindow">
+        <div class="ai-chat-header">
+            <div class="ai-header-left">
+                <div class="ai-avatar"><i class="fas fa-compass"></i></div>
+                <div class="ai-header-info">
+                    <h4 id="aiHeaderTitle">Barev.trip AI Concierge</h4>
+                    <span>Online | Smart Assistant</span>
+                </div>
+            </div>
+            <button class="ai-close-btn" onclick="toggleAiChat()">&times;</button>
+        </div>
+        
+        <div class="ai-messages" id="aiMessages">
+            <div class="msg bot" id="aiWelcomeMsg">
+                Բարև ձեզ! 👋 Ես Barev.trip-ի խելացի AI գործակալն եմ։ Կարող եմ օգնել ընտրել տուր Հայաստանում, հաշվել գինը կամ կազմել անհատական ծրագիր։ Ինչո՞վ կարող եմ օգնել:
+            </div>
+        </div>
+
+        <div class="ai-quick-tags">
+            <span class="ai-tag" onclick="quickAsk('Գառնի')">🏛️ Գառնի և Գեղարդ</span>
+            <span class="ai-tag" onclick="quickAsk('Սևան')">🌊 Սևանա լիճ</span>
+            <span class="ai-tag" onclick="quickAsk('Գներ')">💰 Գներ և արժեք</span>
+            <span class="ai-tag" onclick="quickAsk('Երթուղի')">🗺️ Անհատական ծրագիր</span>
+        </div>
+
+        <div class="ai-input-area">
+            <input type="text" id="aiUserInput" placeholder="Հարցրեք որևէ բան..." onkeypress="handleKeyPress(event)">
+            <button class="ai-send-btn" onclick="sendAiMessage()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- Language & Currency Bar -->
+    <div class="lang-bar">
+        <div><i class="fas fa-phone-alt"></i> +374 (10) 123-456 | <i class="fas fa-envelope"></i> hello@barevtrip.am</div>
+        <div class="lang-switcher">
+            <a href="#" class="active" onclick="setLang('hy')">Հայերեն</a>
+            <a href="#" onclick="setLang('ru')">Русский</a>
+            <a href="#" onclick="setLang('en')">English</a>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <navbar>
+        <a href="#" class="logo">Barev<span>.trip</span></a>
+        <ul class="nav-menu">
+            <li><a href="#" id="m-home">Գլխավոր</a></li>
+            <li><a href="#tours" id="m-tours">Տուրեր</a></li>
+            <li><a href="#stats" id="m-why">Ցուցանիշներ</a></li>
+            <li><a href="#contacts" id="m-contacts">Կապ</a></li>
+        </ul>
+        <button class="btn" onclick="openModal('Ընդհանուր տուրի ամրագրում')"><i class="fas fa-bookmark"></i> <span id="m-book">Ամրագրել</span></button>
+    </navbar>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1 id="h-title">Բացահայտեք իրական Հայաստանը Barev.trip-ի հետ</h1>
+        <p id="h-sub">Հոյակապ լեռներ, հնագույն վանքեր, ջերմ հյուրընկալություն և անմոռանալի գստրոտուրեր։</p>
+        <div class="hero-btns">
+            <a href="#tours" class="btn" id="h-btn">Ընտրել տուր</a>
+        </div>
+    </section>
+
+    <!-- Booking Widget -->
+    <div class="booking-widget">
+        <div class="field-group">
+            <label><i class="fas fa-map-marker-alt"></i> <span id="w-loc">Ուղղություն</span></label>
+            <select id="tourSelect">
+                <option>Գառնի և Գեղարդ</option>
+                <option>Սևանա լիճ և Սևանավանք</option>
+                <option>Խոր Վիրապ և Արարատ</option>
+                <option>Տաթևի վանք և ճանապարհ</option>
+                <option>Դիլիջան և Աղարծին</option>
+                <option>Արենիի գինու տուր</option>
+            </select>
+        </div>
+        <div class="field-group">
+            <label><i class="fas fa-calendar-alt"></i> <span id="w-date">Ամսաթիվ</span></label>
+            <input type="date" id="tourDate" value="2026-06-01">
+        </div>
+        <div class="field-group">
+            <label><i class="fas fa-users"></i> <span id="w-guests">Մասնակիցներ</span></label>
+            <select id="tourGuests">
+                <option>1 անձ</option>
+                <option selected>2 անձ</option>
+                <option>3-5 անձ</option>
+                <option>Խումբ (6+)</option>
+            </select>
+        </div>
+        <div style="display: flex; align-items: flex-end;">
+            <button class="btn" style="width: 100%; justify-content: center; height: 48px;" onclick="quickBook()"><i class="fas fa-search"></i> <span id="w-btn">Ամրագրել հիմա</span></button>
+        </div>
+    </div>
+
+    <!-- Stats Banner -->
+    <div class="container" id="stats" style="padding-top: 0; padding-bottom: 0;">
+        <div class="stats-banner">
+            <div class="stat-item">
+                <h3 id="stat-1">15+</h3>
+                <p id="stat-desc-1">Ուղղություններ</p>
+            </div>
+            <div class="stat-item">
+                <h3 id="stat-2">2,500+</h3>
+                <p id="stat-desc-2">Գոհ զբոսաշրջիկներ</p>
+            </div>
+            <div class="stat-item">
+                <h3 id="stat-3">10</h3>
+                <p id="stat-desc-3">Տարվա փորձ</p>
+            </div>
+            <div class="stat-item">
+                <h3 id="stat-4">100%</h3>
+                <p id="stat-desc-4">Վառ էմոցիաներ</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tours Section -->
+    <div class="container" id="tours">
+        <div class="section-header">
+            <span id="t-span">Հանրաճանաչ ուղղություններ</span>
+            <h2 id="t-h2">Բացահայտեք Հայաստանի լավագույն վայրերը</h2>
+        </div>
+        
+        <div class="tours-grid">
+            <div class="tour-card">
+                <div class="tour-img-wrap">
+                    <span class="tour-badge"><i class="fas fa-clock"></i> 1 օր</span>
+                    <img src="https://images.unsplash.com/photo-1609137144813-7e944417d474?auto=format&fit=crop&w=800&q=80" alt="Garni">
+                </div>
+                <div class="tour-content">
+                    <div class="tour-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> Կոտայք</span>
+                        <span><i class="fas fa-star" style="color:#f59e0b;"></i> 4.9</span>
+                    </div>
+                    <h3>Գառնի և քարայրային Գեղարդ</h3>
+                    <p>Միակ պահպանված հեծանոսական տաճարը Հայաստանում և ժայռափոր վանքը:</p>
+                    <div class="tour-footer">
+                        <div class="tour-price">
+                            <span>Գինը</span>
+                            <strong>15,000 ֏</strong>
+                        </div>
+                        <button class="btn" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;" onclick="openModal('Գառնի և Գեղարդ (15,000 ֏)')">Ամրագրել</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tour-card">
+                <div class="tour-img-wrap">
+                    <span class="tour-badge"><i class="fas fa-clock"></i> 1 օր</span>
+                    <img src="https://images.unsplash.com/photo-1541845157-a6d2d100c931?auto=format&fit=crop&w=800&q=80" alt="Sevan">
+                </div>
+                <div class="tour-content">
+                    <div class="tour-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> Գեղարքունիք</span>
+                        <span><i class="fas fa-star" style="color:#f59e0b;"></i> 4.8</span>
+                    </div>
+                    <h3>Սևանա լիճ և Սևանավանք</h3>
+                    <p>Հայաստանի կապույտ մարգարիտը, բարձրլեռնային լիճն ու հնագույն վանքը թերակղզում:</p>
+                    <div class="tour-footer">
+                        <div class="tour-price">
+                            <span>Գինը</span>
+                            <strong>18,000 ֏</strong>
+                        </div>
+                        <button class="btn" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;" onclick="openModal('Սևանա լիճ և Սևանավանք (18,000 ֏)')">Ամրագրել</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tour-card">
+                <div class="tour-img-wrap">
+                    <span class="tour-badge"><i class="fas fa-clock"></i> 1 օր</span>
+                    <img src="https://images.unsplash.com/photo-1578895101408-1a364d7e74cc?auto=format&fit=crop&w=800&q=80" alt="Khor Virap">
+                </div>
+                <div class="tour-content">
+                    <div class="tour-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> Արարատ</span>
+                        <span><i class="fas fa-star" style="color:#f59e0b;"></i> 5.0</span>
+                    </div>
+                    <h3>Խոր Վիրապ և Արարատի տեսարան</h3>
+                    <p>Ամենամոտ կետը դեպի աստվածաշնչյան Արարատ լեռը և պատմական վանքը:</p>
+                    <div class="tour-footer">
+                        <div class="tour-price">
+                            <span>Գինը</span>
+                            <strong>16,000 ֏</strong>
+                        </div>
+                        <button class="btn" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;" onclick="openModal('Խոր Վիրապ (16,000 ֏)')">Ամրագրել</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Booking -->
+    <div class="modal" id="bookingModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle" style="margin-bottom: 1.5rem;">Ամրագրել տուր</h2>
+            <form onsubmit="submitForm(event)">
+                <div class="field-group" style="margin-bottom: 1rem;">
+                    <label>Ձեր անունը</label>
+                    <input type="text" required placeholder="Անուն Ազգանուն">
+                </div>
+                <div class="field-group" style="margin-bottom: 1rem;">
+                    <label>Հեռախոսահամար / WhatsApp</label>
+                    <input type="tel" required placeholder="+374 XX XXXXXX">
+                </div>
+                <div class="field-group" style="margin-bottom: 1.5rem;">
+                    <label>Նշումներ / Ցանկություններ</label>
+                    <input type="text" placeholder="Օրինակ՝ 2 անձ, ցանկալի է հայերենով">
+                </div>
+                <button type="submit" class="btn" style="width: 100%; justify-content: center;">Հաստատել ամրագրումը</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer id="contacts">
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2rem;">
+            <div>
+                <h3 class="logo" style="color: #fff; margin-bottom: 1rem;">Barev<span>.trip</span></h3>
+                <p>Ձեր վստահելի ուղեցույցը Հայաստանում:</p>
+            </div>
+            <div>
+                <h3>Կապ</h3>
+                <p>ք. Երևան, Աբովյան 12</p>
+                <p>Հեռ: +374 (10) 123-456</p>
+                <p>Email: hello@barevtrip.am</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Barev.trip. Բոլոր իրավունքները պաշտպանված են։</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentLang = 'hy';
+
+        function openModal(tourName) {
+            document.getElementById('bookingModal').style.display = 'flex';
+            document.getElementById('modalTitle').innerText = 'Ամրագրել: ' + tourName;
+        }
+        function closeModal() {
+            document.getElementById('bookingModal').style.display = 'none';
+        }
+        function quickBook() {
+            const sel = document.getElementById('tourSelect').value;
+            openModal(sel);
+        }
+        function submitForm(e) {
+            e.preventDefault();
+            alert('Շնորհակալություն! Ձեր հայաստանյան տուրը հաջողությամբ ամրագրվեց։ Մենք կապ կհաստատենք ձեզ հետ։');
+            closeModal();
+        }
+
+        /* --- AI Smart Concierge Engine --- */
+        function toggleAiChat() {
+            const chat = document.getElementById('aiChatWindow');
+            chat.style.display = (chat.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') sendAiMessage();
+        }
+
+        function quickAsk(topic) {
+            const input = document.getElementById('aiUserInput');
+            input.value = topic;
+            sendAiMessage();
+        }
+
+        function sendAiMessage() {
+            const input = document.getElementById('aiUserInput');
+            const txt = input.value.trim();
+            if (!txt) return;
+
+            // Append User Message
+            appendMessage(txt, 'user');
+            input.value = '';
+
+            // AI Processing with smart typing delay
+            setTimeout(() => {
+                const response = generateAiResponse(txt.toLowerCase());
+                appendMessage(response, 'bot');
+            }, 600);
+        }
+
+        function appendMessage(text, sender) {
+            const container = document.getElementById('aiMessages');
+            const div = document.createElement('div');
+            div.className = 'msg ' + sender;
+            div.innerHTML = text;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function generateAiResponse(q) {
+            // Knowledge & reasoning engine
+            if (q.includes('գառնի') || q.includes('гарни') || q.includes('garni')) {
+                return currentLang === 'ru' 
+                    ? "🏛️ **Храм Гарни и Гегард:** Стоимость 15,000 ֏. Вы увидите единственный языческий храм в регионе и скальный монастырь Гегард (ЮНЕСКО). Включен обед с лавашом!"
+                    : "🏛️ **Գառնի և Գեղարդ:** Արժեքը՝ 15,000 ֏։ Կտեսնեք տարածաշրջանի միակ հեթանոսական տաճարը և Գեղարդավանքը (ՅՈՒՆԵՍԿՕ)։";
+            }
+            if (q.includes('սևան') || q.includes('севан') || q.includes('sevan')) {
+                return currentLang === 'ru'
+                    ? "🌊 **Озеро Севан:** Высокогорное бирюзовое озеро, монастырь Севанаванк на полуострове и знаменитая севанская форель и раки. Стоимость 18,000 ֏."
+                    : "🌊 **Սևանա լիճ:** Հայաստանի կապույտ մարգարիտը, Սևանավանք և համեղ իշխան ու խեցգետին։ Տուրի արժեքը՝ 18,000 ֏։";
+            }
+            if (q.includes('տաթև') || q.includes('татев') || q.includes('tatev')) {
+                return currentLang === 'ru'
+                    ? "🚡 **Татев и Сюник (2 дня):** Самая длинная в мире канатная дорога «Крылья Татева», средневековый монастырь, водопад Шаки и пещеры Хндзореска. 45,000 ֏."
+                    : "🚡 **Տաթև և Սյունիք (2 օր):** Աշխարհի ամենաերկար ճոպանուղին («Տաթևեր»), Շաքիի ջրվեժ և Խնձորեսկ։ Արժեքը՝ 45,000 ֏։";
+            }
+            if (q.includes('գն') || q.includes('цен') || q.includes('price') || q.includes('стоим')) {
+                return currentLang === 'ru'
+                    ? "💰 **Наши цены на однодневные туры:**<br>• Гарни - Гегард: 15,000 ֏<br>• Севан - Севанаванк: 18,000 ֏<br>• Хор Вирап: 16,000 ֏<br>• Дилижан: 20,000 ֏<br>В стоимость входят комфортный транспорт, гид и входные билеты."
+                    : "💰 **Մեր գները մեկօրյա տուրերի համար:**<br>• Գառնի - Գեղարդ: 15,000 ֏<br>• Սևան - Սևանավանք: 18,000 ֏<br>• Խոր Վիրապ: 16,000 ֏<br>• Դիլիջան: 20,000 ֏։";
+            }
+            if (q.includes('երթուղի') || q.includes('маршрут') || q.includes('itinerary') || q.includes('программ')) {
+                return currentLang === 'ru'
+                    ? "🗺️ **Идеальный 3-дневный маршрут по Армении:**<br>День 1: Ереван, Каскад, Гарни и Гегард.<br>День 2: Озеро Севан и Дилижан («Армянская Швейцария»).<br>День 3: Хор Вирап с панорамой Арарата и винный Арени.<br>Хотите забронировать?"
+                    : "🗺️ **Իդեալական 3-օրյա ծրագիր:**<br>Օր 1: Երևան, Կասկադ, Գառնի և Գեղարդ։<br>Օր 2: Սևանա լիճ և Դիլիջան։<br>Օր 3: Խոր Վիրապ և Արենիի գինեգործարան։";
+            }
+
+            return currentLang === 'ru'
+                ? "Спасибо за вопрос! Я могу подробно рассказать о любом монастыре, достопримечательности Армении, рассчитать стоимость на группу или забронировать для вас автомобиль с личным гидом. Напишите, куда бы вы хотели отправиться!"
+                : "Շնորհակալություն հարցի համար! Կարող եմ մանրամասն ներկայացնել ցանկացած տուր, հաշվել արժեքը կամ գրանցել ձեզ տուրի համար։ Ո՞ր վայրն է ձեզ հետաքրքրում:";
+        }
+
+        const dict = {
+            hy: {
+                home: "Գլխավոր", tours: "Տուրեր", why: "Ցուցանիշներ", contacts: "Կապ", book: "Ամրագրել",
+                title: "Բացահայտեք իրական Հայաստանը Barev.trip-ի հետ",
+                sub: "Հոյակապ լեռներ, հնագույն վանքեր, ջերմ հյուրընկալություն և անմոռանալի գստրոտուրեր։",
+                btn: "Ընտրել տուր", loc: "Ուղղություն", date: "Ամսաթիվ", guests: "Մասնակիցներ", wbtn: "Ամրագրել հիմա",
+                tspan: "Հանրաճանաչ ուղղություններ", th2: "Բացահայտեք Հայաստանի լավագույն վայրերը",
+                stat1desc: "Ուղղություններ", stat2desc: "Գոհ զբոսաշրջիկներ", stat3desc: "Տարվա փորձ", stat4desc: "Վառ էմոցիաներ",
+                aiTrig: "AI Ուղեկից",
+                aiWelcome: "Բարև ձեզ! 👋 Ես Barev.trip-ի խելացի AI գործակալն եմ։ Կարող եմ օգնել ընտրել տուր Հայաստանում, հաշվել գինը կամ կազմել անհատական ծրագիր։ Ինչո՞վ կարող եմ օգնել:"
+            },
+            ru: {
+                home: "Главная", tours: "Туры", why: "Статистика", contacts: "Контакты", book: "Забронировать",
+                title: "Откройте настоящую Армению с Barev.trip",
+                sub: "Величественные горы, древние христианские храмы, теплое гостеприимство и незабываемые гастрономические туры.",
+                btn: "Выбрать тур", loc: "Направление", date: "Дата", guests: "Участники", wbtn: "Забронировать сейчас",
+                tspan: "Популярные направления", th2: "Откройте лучшие маршруты Армении",
+                stat1desc: "Направлений", stat2desc: "Довольных туристов", stat3desc: "Лет опыта", stat4desc: "Ярких эмоций",
+                aiTrig: "AI Консьерж",
+                aiWelcome: "Здравствуйте! 👋 Я умный AI-ассистент Barev.trip. Я могу подобрать для вас тур по Армении, рассчитать стоимость на семью или составить маршрут. О чем рассказать?"
+            },
+            en: {
+                home: "Home", tours: "Tours", why: "Stats", contacts: "Contact", book: "Book Now",
+                title: "Discover the Real Armenia with Barev.trip",
+                sub: "Majestic mountains, ancient monasteries, warm hospitality, and unforgettable gourmet tours.",
+                btn: "Choose Tour", loc: "Destination", date: "Date", guests: "Guests", wbtn: "Book Now",
+                tspan: "Popular Destinations", th2: "Explore the Best Routes of Armenia",
+                stat1desc: "Destinations", stat2desc: "Happy Travelers", stat3desc: "Years of Experience", stat4desc: "Bright Emotions",
+                aiTrig: "AI Concierge",
+                aiWelcome: "Hello! 👋 I am Barev.trip's smart AI Concierge. I can help you choose tours in Armenia, calculate budgets, or craft a personal itinerary. How can I help you?"
+            }
+        };
+
+        function setLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-switcher a').forEach(el => el.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const d = dict[lang];
+            document.getElementById('m-home').innerText = d.home;
+            document.getElementById('m-tours').innerText = d.tours;
+            document.getElementById('m-why').innerText = d.why;
+            document.getElementById('m-contacts').innerText = d.contacts;
+            document.getElementById('m-book').innerText = d.book;
+            document.getElementById('h-title').innerText = d.title;
+            document.getElementById('h-sub').innerText = d.sub;
+            document.getElementById('h-btn').innerText = d.btn;
+            document.getElementById('w-loc').innerText = d.loc;
+            document.getElementById('w-date').innerText = d.date;
+            document.getElementById('w-guests').innerText = d.guests;
+            document.getElementById('w-btn').innerText = d.wbtn;
+            document.getElementById('t-span').innerText = d.tspan;
+            document.getElementById('t-h2').innerText = d.th2;
+            document.getElementById('stat-desc-1').innerText = d.stat1desc;
+            document.getElementById('stat-desc-3').innerText = d.stat3desc;
+            document.getElementById('stat-desc-4').innerText = d.stat4desc;
+            document.getElementById('aiTriggerText').innerText = d.aiTrig;
+            document.getElementById('aiWelcomeMsg').innerText = d.aiWelcome;
+        }
+    </script>
+</body>
+</html>
